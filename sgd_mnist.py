@@ -1,3 +1,4 @@
+from IPython.core.display import display
 from fastai.imports import *
 import torch
 import os
@@ -22,7 +23,7 @@ def load_mnist(filename):
     mean, std, x.mean(), x.std()
 
     x_valid = (x_valid - mean) / std
-    x_valid.mean(), x_valid.std()
+    return x_valid.mean()
 
 
 def show(img, title=None):
@@ -30,12 +31,22 @@ def show(img, title=None):
     if title is not None: plt.title(title)
 
 
-def main():
-    URL = 'http://deeplearning.net/data/mnist/'
-    FILENAME = 'data/mnist/mnist.pkl.gz'
-    load_mnist(FILENAME)
+def plots(ims, figsize=(12, 6), rows=2, titles=None):
+    f = plt.figure(figsize=figsize)
+    cols = len(ims)//rows
+    for i in range(len(ims)):
+        sp = f.add_subplot(rows, cols, i+1)
+        sp.axis('Off')
+        if titles is not None: sp.set_title(titles[i], fontsize=16)
+        plt.imshow(ims[i], cmap='gray')
 
-    # show()
+
+def main():
+    url = 'http://deeplearning.net/data/mnist/'
+    filename = 'data/mnist/mnist.pkl.gz'
+    x_valid = load_mnist(filename)
+
+    display(x_valid)
 
 
 if __name__ == '__main__':
